@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Musik frågesport</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="styles.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	
+	<script>
+	$(document).ready(function(){
+
+		console.log("ready");
+
+		var sounds=["cow","cat","dog","chicken"]; 
+		var askedSounds=["0","0","0","0"];
+		var askedAmount=0;
+		var playerAnswer=[-1,-1];
+		var currentQuestion;
+		var nr;
+		var totalPoints=0;
+		var audio=new Audio();
+		var rightAnswerPos=-1;
+		$("#start").click(function()
+		{  
+
+  			
+			start();
+
+		});
+		function start()
+		{	
+			$("#start").show();
+			$("#playSound").show();
+			$("#score").show();
+			$("#myScore").show();
+			$("#slashScore").show();
+			$( "#start" ).hide();
+			$( "#playSound" ).attr("src", "images/quiz/play.png");
+			$( "#score" ).attr("src", "images/quiz/score.png");
+			$( "#myScore" ).attr("src", "images/quiz/"+totalPoints+".png");
+			$( "#slashScore" ).attr("src", "images/quiz/slash.png");
+			$( "#totalScore" ).attr("src", "images/quiz/4.png");
+			setQuestion();
+			setPossibleAnswers();
+		}
+		function setQuestion()
+		{
+			console.log("Setting questions");
+			nr = Math.floor((Math.random() * sounds.length) + 0);
+			if(askedAmount>=4)
+			{
+				console.log("Slut på spelet");
+				endGame();
+			}
+			else if(askedAmount>0)
+			{
+				if(askedSounds[0]!=sounds[nr] &&askedSounds[1]!=sounds[nr]&&askedSounds[2]!=sounds[nr]&&askedSounds[3]!=sounds[nr])
+				{
+					askedSounds[askedAmount]=sounds[nr];
+					console.log(sounds[nr]+" är rätt svar");
+					askedAmount++;
+				}
+				else
+				{
+					setQuestion();
+				}
+				
+
+			}
+			else
+			{
+				console.log(sounds[nr]+" är rätt svar - första frågan");
+				askedSounds[askedAmount]=sounds[nr];
+				askedAmount++;
+			}
+			currentQuestion=askedSounds[askedAmount-1];
+			}
+			function endGame()
+			{
+				$('#answer0').hide();
+				$('#answer1').hide();
+				$('#playSound').hide();
+				$('#start').hide();
+				$('#restart').show();
+				$( "#restart" ).attr("src", "images/quiz/startaom.png");
+
+
+			}
+
+		$("#restart").click(function()
+		{  
+			$("#start").show();
+			restart();
+		});
+		function restart()
+		{
+			$('#answer0').show();
+			$('#answer1').show();
+			$('#playSound').show();
+			$( "#restart" ).hide();
+			askedSounds=["0","0","0","0"];
+			askedAmount=0;
+			playerAnswer=[-1,-1];
+			currentQuestion;
+			nr;
+			totalPoints=0;
+			audio;
+			rightAnswerPos=-1;
+			start();
+		}
+
+
+			
+		function setPossibleAnswers()
+		{
+			var AnswerPos= Math.floor((Math.random() * 2) + 0);
+			var rand=Math.floor((Math.random() * 3) + 0);
+			for (var i = 0; i < playerAnswer.length; i++) {
+				if(i==AnswerPos)
+				{
+					rightAnswerPos=i;
+					playerAnswer[i]=sounds[nr];
+					$( "#answer"+i ).attr("src", "images/quiz/"+playerAnswer[i]+".jpg");
+
+				}
+				else
+				{
+					while(sounds[rand]==sounds[nr])
+					{
+						rand=Math.floor((Math.random() * 3) + 0);
+						
+					}
+					playerAnswer[i]=sounds[rand];
+					$( "#answer"+i ).attr("src", "images/quiz/"+playerAnswer[i]+".jpg");
+				}
+			};
+
+
+		}
+		/*Choosing a question & displaying it*/
+		$("#playSound").click(function()
+		{
+			audio = new Audio("sounds/"+sounds[nr]+".wav");
+			audio.play();
+			console.log("playing sounds/"+sounds[nr]+".wav");
+		});
+		function stopSound()
+		{
+			if(audio.currentTime > 0 && !audio.paused)
+			{			
+				audio.pause();
+				audio.currentTime = 0;
+			}
+		}
+
+		$("#answer0, #answer1" ).click(function() {
+			stopSound();
+		  if($(this).attr('id') == "answer"+rightAnswerPos)
+		  	{
+		  		console.log("src", "images/quiz/"+totalPoints+".png");
+		  		console.log("rätt svar!");
+		  		totalPoints++;
+		  		$( "#myScore" ).attr("src", "images/quiz/"+totalPoints+".png");
+		  		
+
+		  	}
+		  	else
+		  	{
+		  		console.log("fel svar");
+		  	}
+
+		  questionOk=false;
+		  	start();
+		});
+
+
+
+
+	});
+	</script>
+</head>
+<body>
+	<div id="quiz">
+	<div id="playElement">
+	<img src="images/quiz/start.jpg" id="start">
+	
+	<img src="" id="playSound" style="margin-left: 200px">
+	</div>
+	<div id="answerElement">
+	<img src="" id="restart" class="restart" atr="starta om">
+	<img src="" id="answer0" class="answer" atr="bild 1">
+	<img src="" id="answer1" class="answer" atr="bild 2">
+	</div>
+	<div id="scoreElement">
+	<img src="" id="score" arc="Score">
+	<img src="" id="myScore" arc="myScore">
+	<img src="" id="slashScore" arc="slashScore">
+	<img src="" id="totalScore" arc="totalScore">
+	</div>
+	</div>
+
+</body>
+</html>

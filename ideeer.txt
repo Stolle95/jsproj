@@ -1,0 +1,10 @@
+användarvänlig
+välja att spele upp ljud eller bokstavering(egen inspelning) i dropdown meny
+relaterade djur
+javascript slider för foton på djuren
+memory, se ord -> bild
+se bild->ord
+gissa ljudet!
+
+ta med i rapport:
+lagrade currentAnimal med 	localStorage.setItem("currentAnimal", currentAnimal);
